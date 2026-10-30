@@ -10,6 +10,9 @@ or reformatted. The zedBSD build checks each file's size and SHA-256 against
 the values in its own source tree, so the copies here are accepted only while
 they are identical to the upstream files; when this repository cannot be
 reached, the build fetches the same files from the upstream instead.
+One directory differs: `amlogic-s7d/` holds a card image Hardkernel
+distributes, which a build cannot fetch from Hardkernel by itself, so for
+that package this repository is the only source.
 
 The firmware is not covered by zedBSD's license. Each directory's files are
 under the license named for that directory, and each directory carries that
@@ -34,8 +37,10 @@ reverse engineering or limit use to particular hardware.
 | [`powervr/`](powervr/) | `powervr-firmware`: Imagination PowerVR BXE-4-32 GPU firmware (`powervr/rogue_36.50.54.182_v1.fw`, 1.1.OS@6976702) for the VisionFive 2 (the powervr driver) | [imagination/linux-firmware](https://gitlab.freedesktop.org/imagination/linux-firmware) branch `powervr`, commit `8a58f81883f7be458daa34e418cc4079f995b279` (not in kernel.org's linux-firmware) | `LICENSE.powervr` (WHENCE: "Redistributable") | Redistribution in binary form without modification, with the notice and disclaimer; no reverse engineering, decompilation or disassembly; use only with products designed and licensed by Imagination; patent license limited to use alone or with an OSI-approved open source OS |
 | [`rpi5-boot/`](rpi5-boot/) | The Raspberry Pi 5 SD card's boot partition: the device trees of the BCM2712 C1 and D0 steppings (the bootloader is in the board's EEPROM) | [raspberrypi/firmware](https://github.com/raspberrypi/firmware) commit `3d301dd924bcd758a4c8cb19fe8531031f033f43` (`boot/`), the same as `rpi4-boot/` | GPL-2.0 (`COPYING.linux`) | GPL-2.0; the complete source, from [raspberrypi/linux](https://github.com/raspberrypi/linux) commit `89586905b8603e545cce9089a81f5f35d65bc998`, is in `rpi5-boot/source/` |
 | [`visionfive2-dtb/`](visionfive2-dtb/) | The VisionFive 2 card's EFI system partition: the mainline device trees of board revisions v1.2a and v1.3b, which the vendor U-Boot lacks | Compiled by zedBSD (cpp, dtc 1.7.2) from the unmodified sources of Linux v6.12, [torvalds/linux](https://github.com/torvalds/linux) commit `adc218676eef25575469234709c2d87185ca223a`, which are in `visionfive2-dtb/source/` | MIT (`LICENSE`); the sources are GPL-2.0 OR MIT (`source/COPYING`, `source/LICENSES/preferred/`) | MIT: keep the copyright and permission notice |
+| [`mali-csf/`](mali-csf/) | `mali-csf-firmware`: Arm Mali CSF GPU firmware (`mali_csffw.bin`) for the Mali-G310 (Valhall, arch 10) of the ODROID-C5's Amlogic S905X5M (the mali driver) | linux-firmware tag `20260410`, commit `dc85cced…` | `LICENCE.mali_csffw` (WHENCE: "Redistributable") | Redistribution of the whole software with its notices and the licence; use only with Mali-based products; no reverse engineering except where the law allows it; U.K., EU and U.S. export laws |
+| [`amlogic-s7d/`](amlogic-s7d/) | `amlogic-s7d-bootloader`: the ODROID-C5's signed bootloader (Amlogic S905X5M, S7D: BL2, BL30, BL31, BL32 and Hardkernel's U-Boot); the build takes sectors 1 to 6538 of the image and writes them from the SD card's sector 1 | Hardkernel's official ODROID-C5 image `ubuntu-22.04-gnome-desktop-odroidc5-20260610-bsp-boot.img.xz` (SHA-256 `04b9817d…`), unmodified under its own name; no upstream URL a build can fetch | `LICENSE.amlogic` (Amlogic's SLA terms); U-Boot is GPL-2.0, its source is Hardkernel's (see `amlogic-s7d/README.md`) | **Redistributed only for use on the Hardkernel ODROID-C5.** Amlogic gave Hardkernel its prior written permission; the image may be redistributed, unmodified with the license and README, only for use on that board |
 
-`WHENCE` in `i915/`, `intelax211/` and `intelbt/` is linux-firmware's index of
+`WHENCE` in `i915/`, `intelax211/`, `intelbt/` and `mali-csf/` is linux-firmware's index of
 its files and their licenses at the commit above.
 
 ## Updating
@@ -150,3 +155,8 @@ SHA-256 and the new commit of this repository. `SHA256SUMS` lists every file.
 | `visionfive2-dtb/source/include/dt-bindings/power/starfive,jh7110-pmu.h` | 548 | `02a3d3864352f838d803cde4e90f0ebb3cf01b99329e473b1c59da1a8b60e32f` | <https://raw.githubusercontent.com/torvalds/linux/adc218676eef25575469234709c2d87185ca223a/include/dt-bindings/power/starfive,jh7110-pmu.h> |
 | `visionfive2-dtb/source/include/dt-bindings/reset/starfive,jh7110-crg.h` | 7334 | `7db505411061318acdb26d074d2d9b3e18a837550232f77851cc30085c4edcb2` | <https://raw.githubusercontent.com/torvalds/linux/adc218676eef25575469234709c2d87185ca223a/include/dt-bindings/reset/starfive,jh7110-crg.h> |
 | `visionfive2-dtb/source/zedbsd/include/dt-bindings/thermal/thermal.h` | 448 | `2e003ac872bf4c4afecd19d26549418c0419ee5a7b40fa0a2a66597e8ba834c1` | zedBSD's `platform/riscv64/visionfive2/include/dt-bindings/thermal/thermal.h` |
+| `mali-csf/mali_csffw.bin` | 282624 | `a27847ea11f8efb3136340c3ba8aab413ae25145eeb4a7f64ff5edd829a2405b` | <https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/plain/arm/mali/arch10.8/mali_csffw.bin?id=dc85ccedc9c973682fbcf4d628ca61174bcc3120> |
+| `mali-csf/LICENCE.mali_csffw` | 9690 | `ebedc86d1767186a66dcb59ce8dcb97c5fd9ac10de2adaacad226714e4712f6d` | <https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/plain/LICENCE.mali_csffw?id=dc85ccedc9c973682fbcf4d628ca61174bcc3120> |
+| `mali-csf/WHENCE` | 425450 | `c282239a5a2d849677e9304e6f361e475e1b6e71e7c771c03f8986f71b309527` | <https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/plain/WHENCE?id=dc85ccedc9c973682fbcf4d628ca61174bcc3120> |
+| `amlogic-s7d/ubuntu-22.04-gnome-desktop-odroidc5-20260610-bsp-boot.img.xz` | 37760380 | `04b9817d4e5e27ac4cc46dc4ad48fbc164e9a6c6f42eb1b0ba8d7a927accc5f2` | Hardkernel's download site for the ODROID-C5 (dn.odroid.com), the same name |
+| `amlogic-s7d/LICENSE.amlogic` | 1273 | `5e8f7ad650a0af4a14ad5641817323f654d0e1b8dc2019aa6f0944ba9108ff65` | Amlogic's license text, as given by the repository owner |
